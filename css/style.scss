@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+@import 'framework';
+
+
+body {
+    background: #439346;
+    font-family: 'Open Sans';
+    font-size: 16px;
+}
+
+
+.btn {
+    padding: 5px 10px;
+    background-color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+        color: #ffffff;
+        background: #9dc809;
+        -webkit-box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
+        -moz-box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
+        box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
+    }
+}
+
+
+.inactive {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+
+
+
+
+
+.main-wrapper {
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 910px;
+    margin: 0 auto;
+}
+
+.titleHolder {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 20px;
+    background: #326e35;
+
+    -webkit-box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
+        -moz-box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
+        box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
+    h1 {
+        font-size: 28px;
+    }
+}
+
+
+
+
+.cardsHolder {
+    width: 100%;
+    clear: both;
+    text-align:     center;
+    ul {
+        width: 100%;
+        li {
+            margin-right: 10px;
+            display: none;
+            &.active{
+                display: inline-block;
+            }
+        }
+    }
+
+    .score {
+        font-size: 18px;
+        padding: 20px;
+    }
+}
+
+.card {
+    width: 100px;
+    height: 145px;
+    background-image: url('../cards/back.png');
+    background-size: contain;
+
+    img {
+        width: 100%;
+    }
+}
+
+.statusTxt {
+    margin: 10px 0;
+    border: 3px solid #FFEB3B;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #FFEB3B;
+    padding: 25px;
+}
+
+.gameControls {
+    text-align: center;
+    padding: 50px 0;
+
+}
+
+.scoreInfo {
+    text-align: center;
+    h3 {
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .btn {
+        margin: 5px auto;
+    }
+}
