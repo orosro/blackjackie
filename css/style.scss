@@ -2,11 +2,35 @@
 
 @import 'framework';
 
+$basefont: 'Open Sans';
+$basesize: 16px;
+$h1size: 3rem;
+$h3size: 1.5rem;
+
+$yellow: #ffeb3b;
+
+$borderRadius: 25px;
 
 body {
     background: #439346;
-    font-family: 'Open Sans';
-    font-size: 16px;
+    font-family: $basefont;
+    font-size: $basesize;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+h1 {
+    font-size: $h1size;
+    color: $yellow;
+}
+
+h3 {
+font-size: $h3size;
 }
 
 
@@ -49,35 +73,33 @@ body {
     width: 100%;
     max-width: 910px;
     margin: 0 auto;
+
+    border: 5px solid #a29522;
+    padding: 25px;
+    border-radius: $borderRadius;
 }
 
 .titleHolder {
     text-align: center;
     margin-bottom: 50px;
     padding: 20px;
-    background: #326e35;
-
-    -webkit-box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
-        -moz-box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
-        box-shadow: 5px 5px 15px -6px rgba(0,0,0,0.54);
-    h1 {
-        font-size: 28px;
-    }
 }
 
-
+.gameHolder {
+    margin-bottom: 50px;
+}
 
 
 .cardsHolder {
     width: 100%;
     clear: both;
     text-align:     center;
+    min-height: 165px;
     ul {
         width: 100%;
         li {
             display: inline-block;
             margin-right: 10px;
-            // display: none;
         }
     }
 
@@ -102,8 +124,8 @@ body {
 
 .statusTxt {
     margin: 10px 0;
-    border: 3px solid #FFEB3B;
-    border-radius: 15px;
+    border: 3px solid $yellow;
+    border-radius: $borderRadius;
     text-align: center;
     font-size: 1.5rem;
     color: #FFEB3B;
@@ -112,7 +134,7 @@ body {
 
 .gameControls {
     text-align: center;
-    padding: 50px 0;
+    padding: 20px 0;
 
 }
 
@@ -125,4 +147,14 @@ body {
     .btn {
         margin: 5px auto;
     }
+}
+
+.bankerScoreHolder,
+.playerScoreHolder {
+    color: #ffeb3b;
+    font-size: 1.5rem;
+    display: inline-block;
+    padding: 10px;
+    margin: 5px;
+
 }

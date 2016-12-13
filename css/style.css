@@ -460,8 +460,21 @@ HELPER
 
 body {
   background: #439346;
-  font-family: 'Open Sans';
-  font-size: 16px; }
+  font-family: "Open Sans";
+  font-size: 16px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+h1 {
+  font-size: 3rem;
+  color: #ffeb3b; }
+
+h3 {
+  font-size: 1.5rem; }
 
 .btn {
   padding: 5px 10px;
@@ -491,23 +504,24 @@ body {
 .wrapper {
   width: 100%;
   max-width: 910px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  border: 5px solid #a29522;
+  padding: 25px;
+  border-radius: 25px; }
 
 .titleHolder {
   text-align: center;
   margin-bottom: 50px;
-  padding: 20px;
-  background: #326e35;
-  -webkit-box-shadow: 5px 5px 15px -6px rgba(0, 0, 0, 0.54);
-  -moz-box-shadow: 5px 5px 15px -6px rgba(0, 0, 0, 0.54);
-  box-shadow: 5px 5px 15px -6px rgba(0, 0, 0, 0.54); }
-  .titleHolder h1 {
-    font-size: 28px; }
+  padding: 20px; }
+
+.gameHolder {
+  margin-bottom: 50px; }
 
 .cardsHolder {
   width: 100%;
   clear: both;
-  text-align: center; }
+  text-align: center;
+  min-height: 165px; }
   .cardsHolder ul {
     width: 100%; }
     .cardsHolder ul li {
@@ -527,8 +541,8 @@ body {
 
 .statusTxt {
   margin: 10px 0;
-  border: 3px solid #FFEB3B;
-  border-radius: 15px;
+  border: 3px solid #ffeb3b;
+  border-radius: 25px;
   text-align: center;
   font-size: 1.5rem;
   color: #FFEB3B;
@@ -536,7 +550,7 @@ body {
 
 .gameControls {
   text-align: center;
-  padding: 50px 0; }
+  padding: 20px 0; }
 
 .scoreInfo {
   text-align: center; }
@@ -545,5 +559,13 @@ body {
     text-align: center; }
   .scoreInfo .btn {
     margin: 5px auto; }
+
+.bankerScoreHolder,
+.playerScoreHolder {
+  color: #ffeb3b;
+  font-size: 1.5rem;
+  display: inline-block;
+  padding: 10px;
+  margin: 5px; }
 
 /*# sourceMappingURL=style.css.map */

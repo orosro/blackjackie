@@ -219,7 +219,7 @@ function blackJackie(){
             setTimeout(function(){
                 self.gS = 100;
                 self.updateGS();
-            },3000);
+            },1500);
         }
     }
 
