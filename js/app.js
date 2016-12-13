@@ -20,9 +20,10 @@ function blackJackie(){
         self.activeCards = [];
         self.bankerCards = [];
         self.playerCards = [];
-        self.amount = 1000;
+        self.credit = 1000;
         self.playerScore= 0;
         self.bankerScore= 0;
+        self.winStatus = 0;
 
         addEvents();
         self.updateGS();                //
@@ -50,48 +51,141 @@ function blackJackie(){
                 self.gS = 101;
                 self.updateGS();
             })
+            controlHit.addEventListener('click', function(){
+                self.gS = 103;
+                self.updateGS();
+            })
+            controlHold.addEventListener('click', function(){
+                self.gS = 102;
+                self.isBsF = false;
+                self.updateGS();
+            })
         }
     }
 
     self.updateGS = function(){
         var self = this,
             gS = self.gS;
-        console.log(gS);
 
-        if(gS==100){
+        if(gS==100){                        // Rest Game
+            self.resetCards();
+            self.setCredits();
             self.updateInterface();
             self.updateStatusTxt();
-            self.setAmount();
-        }
-
-        if(gS == 101){
-            self.updateInterface();
+        }else  if(gS == 101){               // First Round Starts
             self.updateStatusTxt();
+            self.updateInterface();
             self.drawCards();
-            self.calculateCardScore();
-        }
-
-        if(gS == 102){
-            self.setAmount();
-            self.updateStatusTxt();
-        }
-
-        if(gS == 103){
+        } else if(gS == 102){               // Bank draws card
+            self.bankerCheckScore();
+        } else if(gS == 103){               // Player draws card
+            self.drawCards();
+        }else if(gS == 104){               // Settling
+            self.updateStatusTxt();         // Update the status Text
+            self.updateCredits();              //update the credits
             self.updateInterface();
-            self.updateStatusTxt();
         }
 
+    }
+
+
+    self.resetCards=function(){
+        self.activeCards = [];
+        self.bankerCards = [];
+        self.playerCards = [];
+        self.isBsF = true;
+        self.winStatus=0;
+        document.getElementsByClassName('playerCardsList')[0].innerHTML ='';
+        document.getElementsByClassName('bankerCardsList')[0].innerHTML='';
+        document.getElementsByClassName('playerScoreHolder')[0].innerHTML ='';
+        document.getElementsByClassName('bankerScoreHolder')[0].innerHTML='';
+    }
+
+
+    self.bankerCheckScore = function(){
+        var self = this;
+        var isBankerFirst = document.getElementsByClassName('isBankerFirst')[0];
+        isBankerFirst.setAttribute("style", "background-image:url(\'cards/"+self.bankerCards[0]+".png\')");
+        self.calculateCardScore();
+        while(self.bankerScore<17 && self.bankerScore<=self.playerScore){
+             self.drawCards();
+        }
+        self.gS = 104;
+        self.calculateCardScore();
     }
 
     self.calculateCardScore = function(){
         var self = this,
             playerScoreHolder = document.getElementsByClassName('playerScoreHolder')[0],
-            bankerScoreHolder = document.getElementsByClassName('bankerScoreHolder')[0];
+            bankerScoreHolder = document.getElementsByClassName('bankerScoreHolder')[0],
+            pAces = 0,
+            bAces = 0,
+            cVal;
 
-            for(var i = 0; i<self.playerCards.length; i++){
-                // self.playerCards[i]
+            self.playerScore = 0;
+            self.bankerScore = 0;
+
+
+            for(var i = 0; i<self.playerCards.length; i++){     // iterate through the cards list
+                cVal = self.playerCards[i]%100;                 // module of the card value
+                cVal = (cVal>11)?10: cVal;                      // Check if J,Q,K => val = 10
+                if(cVal==11) {pAces++};                          // if cVal is A, count it
+                self.playerScore += cVal;
+                if(self.playerScore>21){
+                    while(pAces>0 && self.playerScore>21){
+                        self.playerScore -= 10;
+                        pAces--;
+                    }
+                    if(self.playerScore>21){
+                        self.gS = 104;                  // Settling status
+                        self.winStatus = 6;             // Player is Busted
+                        self.updateGS();
+                    }
+                } else if(self.playerScore==21){
+                    self.gS = 104;                  // Settling status
+                    self.winStatus = 4;             // Player has BlackJackie
+                    self.updateGS();
+                }
+            };
+
+            for(var i = 0; i<self.bankerCards.length; i++){     // iterate through the cards list
+                cVal = self.bankerCards[i]%100;                 // module of the card value
+                cVal = (cVal>11)?10: cVal;                      // Check if J,Q,K => val = 10
+                if(cVal==11) {bAces++};                          // if cVal is A, count it
+                if(self.isBsF && i==0){                         // first val is 0 if round 1
+                   cVal=0;
+                }
+                self.bankerScore += cVal;                       // Calculate score
+
+                if(self.bankerScore>21){
+                    while(bAces>0 && self.bankerScore>21){
+                        self.bankerScore -= 10;
+                        bAces--;
+                    }
+                    if(self.bankerScore>21){
+                        self.gS = 104;                  // Settling status
+                        self.winStatus = 7;             // Banker is Busted
+                        self.updateGS();
+                    }
+                } else if(self.bankerScore==21){
+                    self.gS = 104;                  // Settling status
+                    self.winStatus = 5;             // Player has BlackJackie
+                    self.updateGS();
+                }
+            };
+            if(self.gS==104 && self.winStatus==0){
+                if(self.playerScore>self.bankerScore){
+                    self.winStatus = 1;             // PLAYER WINS
+                } else if (self.playerScore<self.bankerScore) {
+                    self.winStatus = 2;             // BANKER WINS
+                } else if (self.playerScore==self.bankerScore){
+                    self.winStatus = 3;             // TIE
+                }
+                self.updateGS();
             }
 
+            playerScoreHolder.innerHTML = self.playerScore;
+            bankerScoreHolder.innerHTML = self.bankerScore;
     }
 
     self.updateInterface = function(){
@@ -115,7 +209,13 @@ function blackJackie(){
             controlHold.classList.remove('inactive');
         }
 
-        if(self.gS==103){
+
+
+        if(self.gS==104){
+            scoreInfo.classList.add('inactive');
+            controlBet.classList.add('inactive');
+            controlHit.classList.add('inactive');
+            controlHold.classList.add('inactive');
             setTimeout(function(){
                 self.gS = 100;
                 self.updateGS();
@@ -123,23 +223,7 @@ function blackJackie(){
         }
     }
 
-    self.drawCards = function(){
-        var self = this,c,
-            playerHolder = document.getElementsByClassName('playerCardsList')[0],
-            bankerHolder = document.getElementsByClassName('bankerCardsList')[0];
 
-        while(self.playerCards.length <2){
-            c = self.getCard();
-            self.playerCards.push(c);
-            playerHolder.innerHTML += '<li class="card cardBack active" data-card="1" data-value="104" style="background-image:url(\'cards/'+c+'.png\')">';
-        }
-
-        while(self.bankerCards.length <2){
-            c = self.getCard();
-            self.bankerCards.push(c);
-            bankerHolder.innerHTML += '<li class="card cardBack active" data-card="1" data-value="104" style="background-image:url(\'cards/'+c+'.png\')">';
-        }
-    }
 
     self.updateStatusTxt = function(){
         var self  =this,
@@ -150,13 +234,21 @@ function blackJackie(){
             statusTxt.innerHTML = 'Please choose your bet and press "Bet"'
         } else if (sts==101){
             statusTxt.innerHTML = 'Hit or Hold?';
-        } else if (sts == 103){
-            if(self.winStatus = 1){
+        } else if (sts == 104){
+            if(self.winStatus == 1){
                 statusTxt.innerHTML = 'Player wins. GG!';
-            } else if(self.winStatus = 2){
-                statusTxt.innerHTML = 'Banker wins. :(';
-            } else if (self.winStatus = 3) {
+            } else if(self.winStatus == 2){
+                statusTxt.innerHTML = 'Bank wins. :(';
+            } else if (self.winStatus == 3) {
                 statusTxt.innerHTML = 'TIE';
+            } else if(self.winStatus == 4){
+                statusTxt.innerHTML = 'Player has BlackJackie!!!';
+            } else if(self.winStatus == 5){
+                statusTxt.innerHTML = 'Banker has BlackJackie!!!';
+            } else if(self.winStatus == 6){
+                statusTxt.innerHTML = 'Player is Busted. Bank Wins.';
+            } else if(self.winStatus == 7){
+                statusTxt.innerHTML = 'Bank is Busted. Player Wins.';
             }
         }
     }
@@ -171,15 +263,48 @@ function blackJackie(){
 
     self.getCard = function(){
         var self =this, card;
-
         card = self.getRandomInt(0,51);
-
-        if(self.activeCards.indexOf(self.cards[card])==-1){
+        if(self.activeCards.indexOf(self.cards[card])!=-1){
+            return self.getCard();
+        } else {
             self.activeCards.push(self.cards[card]);
             return self.cards[card];
-        } else {
-                self.getCard();
         }
+    }
+
+   self.drawCards = function(){
+    var self = this,c,
+        playerHolder = document.getElementsByClassName('playerCardsList')[0],
+        bankerHolder = document.getElementsByClassName('bankerCardsList')[0];
+
+        if(self.gS==101){                           // First Round
+            for(var pc=0;self.playerCards.length <2;pc++){
+                c = self.getCard();
+                self.playerCards.push(c);
+                playerHolder.innerHTML += '<li class="card cardBack" data-card="'+pc+1+'" data-value="'+c+'" style="background-image:url(\'cards/'+c+'.png\')">';
+            }
+
+            for(var bc=0;self.bankerCards.length <2;bc++){
+                c = self.getCard();
+                self.bankerCards.push(c);
+                if(bc==0){
+                    bankerHolder.innerHTML += '<li class="card cardBack isBankerFirst" data-card="'+bc+1+'"></li>';
+                }else{
+                    bankerHolder.innerHTML += '<li class="card cardBack" data-card="'+bc+1+'" data-value="'+c+'" style="background-image:url(\'cards/'+c+'.png\')"></li>';
+                }
+
+            }
+        } else if (self.gS==102){                  // Banker Draws
+            c = self.getCard();
+            self.bankerCards.push(c);
+            bankerHolder.innerHTML += '<li class="card cardBack active" data-value="'+c+'" style="background-image:url(\'cards/'+c+'.png\')">';
+        } else if (self.gS==103) {
+                c = self.getCard();
+                self.playerCards.push(c);
+                playerHolder.innerHTML += '<li class="card cardBack active" data-value="'+c+'" style="background-image:url(\'cards/'+c+'.png\')">';
+        }
+
+        self.calculateCardScore();
     }
 
 
@@ -226,14 +351,28 @@ function blackJackie(){
             biH.value = self.bet;
         }
     }
-
-    self.setAmount = function(){
+    self.updateCredits = function(){
         var self = this,
-            score = document.getElementsByClassName('scoreInfoTxt')[0];
-        score.innerHTML = self.amount;
+            ws = self.winStatus;
+        if([7,4,1].indexOf(ws)!=-1){
+            self.credit+=self.bet;
+        }else if([2,5,6].indexOf(ws)!=-1){
+            self.credit-=self.bet;
+        }
     }
 
-
+    self.setCredits = function(){
+        var self = this,
+            credit = document.getElementsByClassName('scoreInfoTxt')[0];
+            if(self.credit>0){
+                credit.innerHTML = self.credit;
+            }else {
+                var ok = confirm('So long with the fun, right?')
+                if(ok==true){
+                    location.reload();
+                }
+            }
+    }
 
 
 }

@@ -511,10 +511,8 @@ body {
   .cardsHolder ul {
     width: 100%; }
     .cardsHolder ul li {
-      margin-right: 10px;
-      display: none; }
-      .cardsHolder ul li.active {
-        display: inline-block; }
+      display: inline-block;
+      margin-right: 10px; }
   .cardsHolder .score {
     font-size: 18px;
     padding: 20px; }

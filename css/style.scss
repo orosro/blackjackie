@@ -75,11 +75,9 @@ body {
     ul {
         width: 100%;
         li {
+            display: inline-block;
             margin-right: 10px;
-            display: none;
-            &.active{
-                display: inline-block;
-            }
+            // display: none;
         }
     }
 
@@ -94,7 +92,9 @@ body {
     height: 145px;
     background-image: url('../cards/back.png');
     background-size: contain;
+    &.inactive{
 
+    }
     img {
         width: 100%;
     }
